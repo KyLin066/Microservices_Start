@@ -9,9 +9,9 @@
 		<relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.KyLin</groupId>
-	<artifactId>Eureka_Server</artifactId>
+	<artifactId>Eureka01</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Eureka_Server</name>
+	<name>Eureka01</name>
 	<description>Demo project for Spring Boot microservices start</description>
 	<properties>
 		<java.version>20</java.version>
@@ -27,7 +27,10 @@
 
 	<build>
 		<plugins>
-			
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 
