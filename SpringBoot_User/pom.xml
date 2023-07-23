@@ -17,7 +17,11 @@
 		<java.version>20</java.version>
 	</properties>
 	<dependencies>
-		
+		<!-- 网关服务Eureka Client相关依赖 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

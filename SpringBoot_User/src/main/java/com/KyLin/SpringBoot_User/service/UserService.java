@@ -20,6 +20,7 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.stereotype.Service;
 
 import com.KyLin.SpringBoot_User.domain.User;
@@ -35,6 +36,9 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private org.springframework.cloud.client.discovery.DiscoveryClient discoveryClient;
+
     ObjectMapper objectMapper = new ObjectMapper();
     TypeReference<List<WorldDTO>> typeReference = new TypeReference<List<WorldDTO>>() {};
 
@@ -47,8 +51,11 @@ public class UserService {
     // HttpClient查询World的全部数据
     public List<WorldDTO> getWorld() throws IOException, ParseException {
         List<WorldDTO> worlds = new ArrayList<>();
+        List<org.springframework.cloud.client.ServiceInstance> instances = discoveryClient.getInstances("service-provider");
+        ServiceInstance instance = instances.get(0);
+        String url = instance.getUri().toString() + "/world/findAll";
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("http://localhost:8086/world/findAll");
+        HttpGet httpGet = new HttpGet(url);
         CloseableHttpResponse response = httpClient.execute(httpGet);
         try {
             int statusCode = response.getCode();
@@ -70,9 +77,12 @@ public class UserService {
 
     // HttpClient添加单个World数据
     public String addWorld() throws IOException, ParseException, JSONException {
+        List<ServiceInstance> instances = discoveryClient.getInstances("service-provider");
+        ServiceInstance instance = instances.get(0);
+        String url = instance.getUri().toString() + "/world/addOne";
 
         CloseableHttpClient httpConnection = HttpUtils.getHttpConnection();
-        HttpPost httpPost = new HttpPost("http://localhost:8086/world/addOne");
+        HttpPost httpPost = new HttpPost(url);
 
         JSONObject param = new JSONObject();
         param.put("active", "1");
@@ -94,8 +104,12 @@ public class UserService {
 
     // HttpClient修改单个World数据
     public void updateWorld(WorldDTO world) throws IOException {
+        List<ServiceInstance> instances = discoveryClient.getInstances("service-provider");
+        ServiceInstance instance = instances.get(0);
+        String url = instance.getUri().toString() + "/world/update/6";
+
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPut httpPut = new HttpPut("http://localhost:8086/world/update/6");
+        HttpPut httpPut = new HttpPut(url);
         String json = "{\"active\":" + world.getActive() + ", \"worldName\":\"" + world.getWorldName() + "\", \"worldAge\":" + world.getWorldAge() + ", \"worldDesc\":\"" + world.getWorldDesc() + "\", \"worldRadius\":" + world.getWorldRadius() + ", \"worldWeight\":" + world.getWorldWeight() + "}";
         StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
         httpPut.setEntity(entity);
@@ -117,8 +131,12 @@ public class UserService {
 
     // HttpClient删除单个World数据
     public void deleteWorld() throws IOException {
+        List<ServiceInstance> instances = discoveryClient.getInstances("service-provider");
+        ServiceInstance instance = instances.get(0);
+        String url = instance.getUri().toString() + "/world/34";
+
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpDelete httpDelete = new HttpDelete("http://localhost:8086/world/28");
+        HttpDelete httpDelete = new HttpDelete(url);
         CloseableHttpResponse response = httpClient.execute(httpDelete);
         try {
             int statusCode = response.getCode();
